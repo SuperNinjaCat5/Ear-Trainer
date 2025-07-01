@@ -7,7 +7,7 @@ def clear_console():
     
 while True:
     clear_console()
-    print("Please pick a mode duration!")
+    print("Please pick a mode!")
     print("-"*30)
     print("1. Quiz Mode")
     print("2. Learn Mode")
