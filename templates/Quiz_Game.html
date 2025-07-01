@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Game - Ear Trainer</title>
+</head>
+<body>
+
+    <button onclick="playNote()">Play the Note!</button>
+    <t>Score: {{ score }}</t>
+
+    <form action="/guess_submit_quiz_game" method="post">
+        <label for="guess">Enter your guess:</label><br>
+        <input type="text" id="guess" name="player_guess" placeholder="Type something..." required>
+
+        <!-- Hidden inputs to pass state back to server -->
+        <input type="hidden" name="original_freq" value="{{ freq }}">
+        <input type="hidden" name="level" value="{{ level }}">
+        <input type="hidden" name="duration" value="{{ duration }}">
+        <input type="hidden" name="score" value="{{ score }}">
+
+        <button type="submit">Submit Guess</button>
+    </form>
+
+    <script>
+        // Get frequency from Flask-rendered variable
+        const freq = "{{ freq }}";
+
+        function playNote() {
+            if (freq < 20 || freq > 20000) {
+                alert("Frequency must be between 20 and 20000 Hz");
+                return;
+            }
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+
+            oscillator.type = 'sine'; // or 'square', 'triangle', 'sawtooth'
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+
+            setTimeout(() => {
+                oscillator.stop();
+                audioCtx.close();
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>

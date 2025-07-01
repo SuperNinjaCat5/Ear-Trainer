@@ -25,3 +25,5 @@ while True:
         continue
     elif player_input == "4":
         exit()
+    else:
+        continue
