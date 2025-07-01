@@ -1,4 +1,4 @@
-def quiz_game():   
+def learn_game():   
     import winsound
     import os
     import random
@@ -172,7 +172,7 @@ def quiz_game():
         print("3. Quarter Notes")
         print("4. Sixteenth Notes")
         print("-"*30)
-        player_input = input(">")
+        player_input = input("> ")
         clear_console()
 
         if player_input == "1":
@@ -194,7 +194,7 @@ def quiz_game():
         print("3. Hard")
         print("4. Beethoven")
         print("-"*30)
-        player_input = input(">")
+        player_input = input("> ")
         clear_console()
 
         if player_input == "1":
@@ -227,48 +227,35 @@ def quiz_game():
                 print("Something Failed Im sorry :(")
         
         while True: #game-loop
-            print("Guess the note! (Type O for options, q for quit)")
-            print(f"Score: {score}")
-            
+
             note_key = random.choice(list(level.keys()))     
             note_name = level[note_key]                       
             freq = note_freqs.get(note_name)
 
-            debug_print(f'Note choice: {note_name}, Frequency: {freq}')
+            while True:
+                print(f'Note: {note_name}')
 
-            if freq:
-                winsound.Beep(freq, note_types[note_duration])
-            else:
-                print(f"Unknown note frequency for {note_name}")
+                if freq:
+                    winsound.Beep(freq, note_types[note_duration])
+                else:
+                    print(f"Unknown note frequency for {note_name}")
 
-            debug_print(f'Note is: {note_name}')
-            guess = input(">")
+                choice = input("1. New Note\n2. Play again\n3. Quit\n> ")
+                
+                choice = int(choice)
 
-            if guess.lower() == 'o':
                 clear_console()
 
-                debug_print(f'Level: {level}')
-                print("Options:")
-                for i in level:
-                    print(level.get(i))
+                debug_print(input)
 
-                input("Press enter to go back...>")
-                clear_console()
-                continue
-
-            elif guess.lower() == 'q':
-                clear_console()
-                return
-
-            if guess.upper().strip() == note_name:
-                score += 1
-                print("Correct!")
-                time.sleep(1)
-            elif guess != note_name and guess != 'o':
-                print("Incorrect!")
-                time.sleep(1)
-            
-            clear_console()
+                if choice == 1:
+                    break
+                elif choice == 2:
+                    choice
+                elif choice == 3:
+                    return
+                else:
+                    print("Misunderstood Choice")
 
 if __name__ == "__main__":
-    quiz_game()
+    learn_game()
