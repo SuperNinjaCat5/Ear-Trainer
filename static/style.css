@@ -1,10 +1,119 @@
-body {
-    background-color: #1e1e2f;
-    color: white;
-    font-family: sans-serif;
-    padding: 2rem;
+/* Universal reset and base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-h1 {
-    color: #4fc3f7;
+body {
+  background-color: #f5f7fa;
+  line-height: 1.6;
+  font-size: 16px;
+  padding: 20px;
+}
+
+/* Container to center content */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #222;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Inputs and text fields */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Links */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+/* Small responsive tweak */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 18px;
+  }
 }

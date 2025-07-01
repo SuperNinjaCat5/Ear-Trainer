@@ -25,9 +25,10 @@ def submit_level_duration():
 
 @app.route("/Quiz_Game/<level>-<duration>")
 def show_page_Quiz_Game(level, duration):
+    message = request.args.get("message", "")
+    score = int(request.args.get("score", 0))
     freq = get_random_freq(level)
-    score = int(request.args.get("score", 0))  # default score = 0
-    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score)
+    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message)
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])
 def guess_submit_quiz_game():
@@ -55,13 +56,15 @@ def guess_submit_quiz_game():
     if original_name is None:
         original_name = 'A4' 
 
+    correct = f"Incorrect the note was {original_name}"
 
     if player_guess.strip().upper() == original_name.upper():
         score += 1
+        correct = "Correct!"
 
     new_freq = get_random_freq(level)
 
-    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score))
+    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=correct))
 
 @app.route("/<page>")
 def show_page_select_game(page):
