@@ -225,47 +225,51 @@ def quiz_game():
             else:
                 print("Something Failed Im sorry :(")
         
-        while True: #game-loop
-            print("Guess the note! (Type O for options, q for quit)")
-            print(f"Score: {score}")
-            
+        while True: #game-loop   
             note_key = random.choice(list(level.keys()))     
             note_name = level[note_key]                       
             freq = note_freqs.get(note_name)
 
-            debug_print(f'Note choice: {note_name}, Frequency: {freq}')
-
-            if freq:
-                winsound.Beep(freq, note_types[note_duration])
-            else:
-                print(f"Unknown note frequency for {note_name}")
-
-            debug_print(f'Note is: {note_name}')
-            guess = input(">")
-
-            if guess.lower() == 'o':
+            while True:
                 clear_console()
+                print("Guess the note! (Type O for options, q for quit)")
+                print(f"Score: {score}")
 
-                debug_print(f'Level: {level}')
-                print("Options:")
-                for i in level:
-                    print(level.get(i))
+                debug_print(f'Note choice: {note_name}, Frequency: {freq}')
 
-                input("Press enter to go back...>")
-                clear_console()
-                continue
+                if freq:
+                    winsound.Beep(freq, note_types[note_duration])
+                else:
+                    print(f"Unknown note frequency for {note_name}")
 
-            elif guess.lower() == 'q':
-                clear_console()
-                return
+                debug_print(f'Note is: {note_name}')
+                guess = input(">")
 
-            if guess.upper().strip() == note_name:
-                score += 1
-                print("Correct!")
-                time.sleep(1)
-            elif guess != note_name and guess != 'o':
-                print(f"Incorrect! The note was: {note_name}")
-                time.sleep(1)
+                if guess.lower() == 'o':
+                    clear_console()
+
+                    debug_print(f'Level: {level}')
+                    print("Options:")
+                    for i in level:
+                        print(level.get(i))
+                    
+                    input("Press enter to go back...>")
+                    clear_console()
+                    continue
+
+                elif guess.lower() == 'q':
+                    clear_console()
+                    return
+
+                if guess.upper().strip() == note_name:
+                    score += 1
+                    print("Correct!")
+                    time.sleep(1)
+                    break
+                elif guess != note_name and guess != 'o':
+                    print(f"Incorrect! The note was: {note_name}")
+                    time.sleep(1)
+                    break
             
             clear_console()
 
