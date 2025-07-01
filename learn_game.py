@@ -2,10 +2,9 @@ def learn_game():
     import winsound
     import os
     import random
-    import time
+    import getpass
 
     debug_mode = False #Toggle for debug text.
-    print("Debug_Mode")
 
     def clear_console():
         os.system('cls')
@@ -212,7 +211,30 @@ def learn_game():
 
         return current_level_dict
 
+
+    def menu_action():
+        print("Please pick a mode!")
+        print("-"*30)
+        print("1. Guess")
+        print("2. Leaderboard") #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DO MEEEEEEEEEEEEEEEEEEEEE
+        print("3. Delete Data") # ANDD MEEEEE LATER
+        print("4. Quit")
+        print("-"*30)
+        player_input = input("> ")
+        clear_console()
+
+        if player_input == "1":
+            return False
+        elif player_input == "2":
+            level = 'm'
+        elif player_input == "3":
+            level = 'h'
+        elif player_input == "4":
+            return True
+
     while True: #Ear Trainer main-loop
+        if menu_action():
+            return
         
         print("Welcome To Ear Trainer!")
         while True: #get note_duration, level. Checks if they are present

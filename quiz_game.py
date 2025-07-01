@@ -5,7 +5,6 @@ def quiz_game():
     import time
 
     debug_mode = False #Toggle for debug text.
-    print("Debug_Mode")
 
     def clear_console():
         os.system('cls')
@@ -265,7 +264,7 @@ def quiz_game():
                 print("Correct!")
                 time.sleep(1)
             elif guess != note_name and guess != 'o':
-                print("Incorrect!")
+                print(f"Incorrect! The note was: {note_name}")
                 time.sleep(1)
             
             clear_console()
