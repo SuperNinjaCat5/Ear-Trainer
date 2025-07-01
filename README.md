@@ -1,5 +1,5 @@
 🎵🎶🎺🎷🎻  
-# Note Learn!
+# Ear Trainer!
 
 A useful open-source terminal game (soon to be web app) that lets you  
 test and improve your ear.
