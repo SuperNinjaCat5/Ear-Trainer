@@ -9,11 +9,21 @@ VALID_PAGES = ['home', 'Quiz_Game', 'Learn_Game', 'Leaderboard', 'Quiz_Game_Menu
 def home():
     return render_template('home.html')
 
+@app.route("/quiz_game_menu")
+def display_quiz_menu():
+    return redirect(url_for("show_learn_game"))
+
 @app.route("/submit", methods=["POST"])
 def submit_game_choice():
     choice = request.form.get("user_input")
     if choice in VALID_PAGES:
-        return redirect(url_for("show_page_select_game", page=f'{choice}_Menu'))
+        if choice == 'Quiz_Game':
+            print("Picked show page select game")
+            return redirect(url_for("show_page_select_game", page=f'{choice}_Menu'))
+        elif choice == 'Learn_Game':
+            return redirect(url_for("show_learn_game"))
+        else:
+            return redirect(url_for("show_page_select_game", page=choice))
     else:
         abort(404)
 
@@ -28,7 +38,18 @@ def show_page_Quiz_Game(level, duration):
     message = request.args.get("message", "")
     score = int(request.args.get("score", 0))
     freq = get_random_freq(level)
-    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message)
+    duration_ms = 4000
+    duration = float(duration)
+    if duration == 0.5:
+        duration_ms = 250
+    if duration == 1:
+        duration_ms = 500
+    if duration == 2:
+        duration_ms = 100
+    if duration == 4:
+        duration_ms = 2000
+
+    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms)
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])
 def guess_submit_quiz_game():
@@ -56,15 +77,15 @@ def guess_submit_quiz_game():
     if original_name is None:
         original_name = 'A4' 
 
-    correct = f"Incorrect the note was {original_name}"
-
     if player_guess.strip().upper() == original_name.upper():
         score += 1
-        correct = "Correct!"
+        message = "Correct!"
+    else:
+        message = f"Incorrect! The correct note was {original_name}. You guessed: {player_guess.strip()}"
 
     new_freq = get_random_freq(level)
 
-    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=correct))
+    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message))
 
 @app.route("/<page>")
 def show_page_select_game(page):
@@ -72,6 +93,14 @@ def show_page_select_game(page):
         return render_template(f"{page}.html")
     else:
         abort(404)
+
+@app.route("/Learn_Game")
+def show_learn_game():
+    return render_template("Learn_Game.html")
+
+# @app.route("/Leaderboard")
+# def show_learn_game():
+#     return render_template("Learn_Game.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

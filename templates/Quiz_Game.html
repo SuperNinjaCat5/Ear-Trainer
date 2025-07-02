@@ -5,36 +5,49 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <nav style="margin-bottom: 20px;">
+        <a href="/">Home</a> |
+        <a href="/Quiz_Game_Menu">Quiz Game</a> |
+        <a href="/Learn_Game">Learn Mode</a>
+    </nav>
 
-    <button onclick="playNote()">Play the Note!</button>
-    <t>Score: {{ score }}</t>
+    <button onclick="playNote()" style="margin-bottom: 10px;">Play the Note!</button>
+    <span style="font-weight: bold; margin-left: 15px;">Score: {{ score }}</span>
 
-    <form action="/guess_submit_quiz_game" method="post">
+    <form action="/guess_submit_quiz_game" method="post" style="margin-top: 20px; max-width: 400px;">
         <input type="hidden" name="original_freq" value="{{ freq }}">
         <input type="hidden" name="score" value="{{ score }}">
         <input type="hidden" name="level" value="{{ level }}">
         <input type="hidden" name="duration" value="{{ duration }}">
-        
+
         <label for="guess">Enter your guess:</label><br>
-        <input type="text" id="guess" name="player_guess" placeholder="Type your guess here..." required>
-        <button type="submit">Submit Guess</button>w
+        <input 
+            type="text" 
+            id="guess" 
+            name="player_guess" 
+            placeholder="Type your guess here..." 
+            required
+            style="width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box;"
+        >
+        <button type="submit" style="padding: 8px 16px;">Submit Guess</button>
     </form>
 
-    <p>{{ message }}</p> 
+    <p style="margin-top: 20px;">{{ message }}</p> 
 
     <script>
-        // Get frequency from Flask-rendered variable
         const freq = "{{ freq }}";
+        const duration = "{{ duration_ms }}";
 
         function playNote() {
             if (freq < 20 || freq > 20000) {
                 alert("Frequency must be between 20 and 20000 Hz");
                 return;
             }
+
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
 
-            oscillator.type = 'sine'; // or 'square', 'triangle', 'sawtooth'
+            oscillator.type = 'sine';
             oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
             oscillator.connect(audioCtx.destination);
@@ -43,7 +56,7 @@
             setTimeout(() => {
                 oscillator.stop();
                 audioCtx.close();
-            }, 1000);
+            }, duration);
         }
     </script>
 
