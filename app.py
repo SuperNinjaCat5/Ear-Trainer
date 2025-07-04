@@ -11,7 +11,15 @@ def home():
 
 @app.route("/quiz_game_menu")
 def display_quiz_menu():
-    return redirect(url_for("show_learn_game"))
+    return redirect(url_for("show_page_Quiz_Game"))
+
+@app.route("/learn_game_menu")
+def display_learn_menu():
+    return render_template("Learn_Game_Menu.html")
+
+@app.route("/Learn_Game")
+def route_to_menu():
+    return redirect(url_for("display_learn_menu"))
 
 @app.route("/submit", methods=["POST"])
 def submit_game_choice():
@@ -21,13 +29,13 @@ def submit_game_choice():
             print("Picked show page select game")
             return redirect(url_for("show_page_select_game", page=f'{choice}_Menu'))
         elif choice == 'Learn_Game':
-            return redirect(url_for("show_learn_game"))
+            return redirect(url_for("display_learn_menu"))
         else:
             return redirect(url_for("show_page_select_game", page=choice))
     else:
         abort(404)
 
-@app.route("/submit_level_duration", methods=["POST"])
+@app.route("/submit_level_duration_quiz", methods=["POST"])
 def submit_level_duration():
     level = request.form.get("level")
     duration = request.form.get("duration")
@@ -94,9 +102,30 @@ def show_page_select_game(page):
     else:
         abort(404)
 
-@app.route("/Learn_Game")
-def show_learn_game():
-    return render_template("Learn_Game.html")
+@app.route("/Learn_Game/<level>-<duration>")
+def show_learn_game(level, duration):
+    score = int(request.args.get("score", 0))
+    freq = get_random_freq(level)
+    duration_ms = 4000
+    duration = float(duration)
+    if duration == 0.5:
+        duration_ms = 250
+    if duration == 1:
+        duration_ms = 500
+    if duration == 2:
+        duration_ms = 100
+    if duration == 4:
+        duration_ms = 2000
+
+    note_name = get_note_name(level, freq)
+
+    return render_template("Learn_Game.html", level=level, duration=duration, freq=freq, score=score, duration_ms=duration_ms, note_name=note_name)
+
+@app.route("/submit_level_duration_learn", methods=["POST"])
+def submit_level_duration_learn():
+    level = request.form.get("level")
+    duration = request.form.get("duration")
+    return redirect(url_for("show_learn_game", level=level, duration=duration))
 
 # @app.route("/Leaderboard")
 # def show_learn_game():

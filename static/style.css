@@ -8,32 +8,35 @@
 }
 
 body {
-  background-color: #f5f7fa;
+  background-color: #f0f4f8;
   line-height: 1.6;
   font-size: 16px;
   padding: 20px;
 }
 
-/* Container to center content */
+/* Centered container with soft edges */
 .container {
   max-width: 960px;
   margin: 0 auto;
-  background-color: white;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease;
 }
 
 /* Headings */
 h1, h2, h3 {
   color: #222;
-  margin-bottom: 15px;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 /* Paragraphs */
 p {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  line-height: 1.75;
 }
 
 /* Buttons */
@@ -41,47 +44,52 @@ button {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 18px;
+  padding: 12px 20px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.25s ease;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
 }
 
-/* Inputs and text fields */
+/* Form elements */
 input[type="text"],
 input[type="number"],
 select,
 textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 16px;
-  transition: border-color 0.3s ease;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
+input:focus,
 select:focus,
 textarea:focus {
   outline: none;
   border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
 /* Links */
 a {
   color: #007bff;
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 a:hover {
   text-decoration: underline;
+  color: #0056b3;
 }
 
 /* Tables */
@@ -89,27 +97,31 @@ table {
   border-collapse: collapse;
   width: 100%;
   margin-bottom: 25px;
+  font-size: 15px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  padding: 14px 16px;
   text-align: left;
 }
 
 th {
-  background-color: #f0f0f0;
+  background-color: #f1f3f5;
   font-weight: 600;
 }
 
-/* Small responsive tweak */
+/* Mobile responsiveness */
 @media (max-width: 600px) {
   body {
     padding: 10px;
   }
 
   .container {
-    padding: 15px;
+    padding: 20px;
   }
 
   button {

@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>  
-    <title>Home - Ear Trainer</title>
+<head>
+    <title>Learn Game - Ear Trainer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
-    <nav>
+    <nav style="margin-bottom: 20px;">
         <a href="/">Home</a> |
         <a href="/Quiz_Game_Menu">Quiz Game</a> |
         <a href="/Learn_Game">Learn Mode</a>
     </nav>
-    <h1>Im lazy here later L</h1> 
+
+    <button onclick="playNote()" style="margin-bottom: 10px;">Play the Note!</button>
+    <span style="font-weight: bold; margin-left: 15px;">Note: {{ note_name }}</span><br>
+    <button onclick="location.reload()" style="margin-bottom: 10px; font-size: 12px; padding: 4px 8px;">New Note</button>
+    <script>
+        const freq = "{{ freq }}";
+        const duration = "{{ duration_ms }}";
+
+        function playNote() {
+            if (freq < 20 || freq > 20000) {
+                alert("Frequency must be between 20 and 20000 Hz");
+                return;
+            }
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+
+            setTimeout(() => {
+                oscillator.stop();
+                audioCtx.close();
+            }, duration);
+        }
+    </script>
+
 </body>
 </html>
