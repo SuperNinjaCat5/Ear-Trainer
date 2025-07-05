@@ -1,22 +1,24 @@
-🎵🎶🎺🎷🎻  
-# Ear Trainer!
+# 🎵🎶🎺🎷🎻 Ear Trainer!
 
-A useful open-source terminal game (soon to be web app) that lets you  
-test and improve your ear.
+A useful open-source web game (also has a terminal version: `./terminal_game`) that lets you  
+test and improve your musical ear!
 
-## About the project:
-- A simple, fun project meant to help me and others improve their musical skills 🔥  
-- Made by SuperNinjaCat5
+Try it out: [music.SuperNinjaCat5.us](https://music.SuperNinjaCat5.us)
 
-## As of now:
-- Two Modes:  
-  1. A simple quiz mode  
-  2. A simple learn mode  
-- Terminal based  
-- No global variables (I think, I hope)  
-- Only Windows (until website drops)  
+## About the project
+- A simple, fun project to help me and others improve musical skills 🔥  
+- Created by SuperNinjaCat5
 
-## For the future:
-- Plans to make into a website.
+## Current features
+- Two modes:  
+  1. Quiz mode  
+  2. Learn mode  
+- Terminal-based version available  
+- No global variables (supports multiple users simultaneously)  
+- Terminal version supports Windows only  
 
-🎵🎶🎺🎷🎻  
+## Planned features
+- Leaderboard!  
+- GitHub login for saving progress  
+
+🎵🎶🎺🎷🎻
