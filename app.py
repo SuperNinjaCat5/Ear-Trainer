@@ -1,13 +1,32 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
 from web_quiz_game import get_random_note, get_note_name, get_random_freq
+from flask_dance.contrib.github import make_github_blueprint, github
+from dotenv import load_dotenv
+import os
+import json_controller
+
+load_dotenv()
+
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersekrit")
+app.config["GITHUB_OAUTH_CLIENT_ID"] = os.environ.get("GITHUB_OAUTH_CLIENT_ID")
+app.config["GITHUB_OAUTH_CLIENT_SECRET"] = os.environ.get("GITHUB_OAUTH_CLIENT_SECRET")
+github_bp = make_github_blueprint()
+app.register_blueprint(github_bp, url_prefix="/login")
 
 VALID_PAGES = ['home', 'Quiz_Game', 'Learn_Game', 'Leaderboard', 'Quiz_Game_Menu']
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    if not github.authorized:
+        return redirect(url_for("github.login"))
+
+    resp = github.get("/user")
+    assert resp.ok
+    username = resp.json()["login"]
+    return render_template("home.html", username=username)
+
 
 @app.route("/quiz_game_menu")
 def display_quiz_menu():
@@ -113,7 +132,7 @@ def show_learn_game(level, duration):
     if duration == 1:
         duration_ms = 500
     if duration == 2:
-        duration_ms = 100
+        duration_ms = 1000
     if duration == 4:
         duration_ms = 2000
 
@@ -127,9 +146,36 @@ def submit_level_duration_learn():
     duration = request.form.get("duration")
     return redirect(url_for("show_learn_game", level=level, duration=duration))
 
-# @app.route("/Leaderboard")
-# def show_learn_game():
-#     return render_template("Learn_Game.html")
+@app.route("/Submit_Leaderboard", methods=["POST"])
+def submit_leaderboard():
+    score = request.form.get("score")
+    user_data = resp.json()
+
+    if not github.authorized:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    resp = github.get("/user")
+    if not resp.ok:
+        return jsonify({"error": f"Failed to fetch user info: {resp.text}"}), 500
+    resp = github.get("/user")
+    if not resp.ok:
+        return f"Failed to fetch user info: {resp.text}", 500
+    
+    data = jsonify({"username": user_data.get("login"), "score": score})
+    json_controller.write_data_json("leaderboard.json", data)
+
+    return render_template("Leaderboard.html", data=data)
+
+@app.route("/Leaderboard")
+def show_leaderboard():
+    resp = github.get("/user")
+    if not resp.ok:
+        return f"Failed to fetch user info: {resp.text}", 500
+    user_data = resp.json()
+    username = user_data.get("login")
+    leaderboard_data = json_controller.read_data_json("leaderboard.json")
+    data = leaderboard_data.get[username]
+    return render_template("Leaderboard.html", data=data)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True)
