@@ -67,6 +67,7 @@ def show_page_Quiz_Game(level, duration):
     freq = get_random_freq(level)
     duration_ms = 4000
     duration = float(duration)
+    failpass = request.args.get("failpass", "")
     if duration == 0.5:
         duration_ms = 250
     if duration == 1:
@@ -75,9 +76,12 @@ def show_page_Quiz_Game(level, duration):
         duration_ms = 100
     if duration == 4:
         duration_ms = 2000
-
     
-    failpass = request.args.get("failpass", "Passd")
+    if failpass:
+        print("Is failpass")
+        failpass = failpass
+    else:
+        failpass = "Pass"
     return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms, failpass=failpass)
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])

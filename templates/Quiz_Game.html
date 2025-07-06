@@ -4,31 +4,33 @@
     <title>Quiz Game - Ear Trainer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-<div id="myElement" class="hidden" style="display:none; border:1px solid #ccc; padding:20px; width:300px; text-align:center;">
-    <h1>Game Over!</h1>
-    <span style="font-weight: bold; margin-left: 15px;">Highscore: {{ highscore }}</span><br>
-    <span>Score: {{ score }}</span>
-    <p>{{ message }}</p>
-</div>
-    <script>
-        function passfail_check() {
-            const passfail="{{ passfail }}"
-            if (passfail == "Fail") {
-            document.getElementById("myElement").style.display = "block";
-            }
-        }
-        
-        window.onload = passfail_check;
+<body>    
+<script>
+    window.onload = function () {
+        const passfail = "{{ failpass }}".trim();
         console.log("passfail:", passfail);
-    </script>
+        if (passfail === "Fail") {
+            document.getElementById("Lose_Message").style.display = "block";
+            document.getElementById("Game").style.display = "none";
+        }
+    };
+</script>
 
     <nav style="margin-bottom: 20px;">
-        <a onclick="history.back()">Back</a> |
+        <a href="/">Home</a> |
         <a href="/Quiz_Game_Menu">Quiz Game</a> |
         <a href="/Learn_Game">Learn Mode</a>
     </nav>
 
+<div id="Lose_Message" class="hidden" style="display:none; text-align:center;">
+    <h1>Game Over!</h1>
+    <button onclick="window.location.href='/Quiz_Game/{{ level }}-{{ duration }}'">Play Again!</button>
+    <br><span style="font-weight: bold; margin-left: 15px;">Highscore: {{ highscore }}</span><br>
+    <span>Score: {{ score }}</span>
+    <p>{{ message }}</p>
+
+</div>
+<div id="Game" style="display:block;">
     <button onclick="playNote()" style="margin-bottom: 10px;">Play the Note!</button>
     <span style="font-weight: bold; margin-left: 15px;">Score: {{ score }}</span>
 
@@ -78,6 +80,6 @@
             }, duration);
         }
     </script>
-
+</div>
 </body>
 </html>
