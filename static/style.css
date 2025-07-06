@@ -128,4 +128,8 @@ th {
     width: 100%;
     font-size: 18px;
   }
+
+    .hidden {
+    display: none;
+  }
 }

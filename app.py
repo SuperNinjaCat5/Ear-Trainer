@@ -76,7 +76,9 @@ def show_page_Quiz_Game(level, duration):
     if duration == 4:
         duration_ms = 2000
 
-    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms)
+    
+    failpass = request.args.get("failpass", "Passd")
+    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms, failpass=failpass)
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])
 def guess_submit_quiz_game():
@@ -107,12 +109,20 @@ def guess_submit_quiz_game():
     if player_guess.strip().upper() == original_name.upper():
         score += 1
         message = "Correct!"
+        failpass = "Pass"
     else:
-        message = f"Incorrect! The correct note was {original_name}. You guessed: {player_guess.strip()}"
+        message = f"Wrong Note! The correct note was {original_name}. You guessed: {player_guess.strip().upper()}"
+        failpass = "Fail"
 
-    new_freq = get_random_freq(level)
+    resp = github.get("/user")
+    if not resp.ok:
+        return f"Failed to fetch user info: {resp.text}", 500
+    user_data = resp.json()
+    username = user_data.get("login")
+    leaderboard_data = json_controller.read_data_json("leaderboard.json")
 
-    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message))
+    return redirect(url_for("submit_leaderboard", level=level, duration=duration, score=score, message=message, failpass=failpass))
+    #return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=data.get("score")))
 
 @app.route("/<page>")
 def show_page_select_game(page):
@@ -146,10 +156,14 @@ def submit_level_duration_learn():
     duration = request.form.get("duration")
     return redirect(url_for("show_learn_game", level=level, duration=duration))
 
-@app.route("/Submit_Leaderboard", methods=["POST"])
+@app.route("/Submit_Leaderboard", methods=["GET", "POST"])
 def submit_leaderboard():
+    level = request.args.get("level")
+    duration = request.args.get("duration") 
+    score = request.args.get("score")
+    message = request.args.get("message", "")
+    failpass = request.args.get("failpass", "")
     score = request.form.get("score")
-    user_data = resp.json()
 
     if not github.authorized:
         return jsonify({"error": "Unauthorized"}), 401
@@ -161,10 +175,14 @@ def submit_leaderboard():
     if not resp.ok:
         return f"Failed to fetch user info: {resp.text}", 500
     
-    data = jsonify({"username": user_data.get("login"), "score": score})
+    user_data = resp.json()
+    
+    data = {"username": user_data.get("login"), "score": score}
     json_controller.write_data_json("leaderboard.json", data)
 
-    return render_template("Leaderboard.html", data=data)
+    data = {"username": user_data.get("login"), "score": score}
+
+    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=data.get("score")))
 
 @app.route("/Leaderboard")
 def show_leaderboard():
@@ -174,7 +192,7 @@ def show_leaderboard():
     user_data = resp.json()
     username = user_data.get("login")
     leaderboard_data = json_controller.read_data_json("leaderboard.json")
-    data = leaderboard_data.get[username]
+    data = leaderboard_data.get(username)
     return render_template("Leaderboard.html", data=data)
 
 if __name__ == "__main__":

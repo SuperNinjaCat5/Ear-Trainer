@@ -5,6 +5,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div id="myElement" class="hidden" style="display:none; border:1px solid #ccc; padding:20px; width:300px; text-align:center;">
+    <h1>Game Over!</h1>
+    <span style="font-weight: bold; margin-left: 15px;">Highscore: {{ highscore }}</span><br>
+    <span>Score: {{ score }}</span>
+    <p>{{ message }}</p>
+</div>
+    <script>
+        function passfail_check() {
+            const passfail="{{ passfail }}"
+            if (passfail == "Fail") {
+            document.getElementById("myElement").style.display = "block";
+            }
+        }
+        
+        window.onload = passfail_check;
+        console.log("passfail:", passfail);
+    </script>
+
     <nav style="margin-bottom: 20px;">
         <a onclick="history.back()">Back</a> |
         <a href="/Quiz_Game_Menu">Quiz Game</a> |
@@ -19,6 +37,7 @@
         <input type="hidden" name="score" value="{{ score }}">
         <input type="hidden" name="level" value="{{ level }}">
         <input type="hidden" name="duration" value="{{ duration }}">
+        <input type="hidden" name="passfail" value="{{ passfail }}">
 
         <label for="guess">Enter your guess:</label><br>
         <input 
