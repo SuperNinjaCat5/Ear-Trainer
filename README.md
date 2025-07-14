@@ -3,7 +3,7 @@
 A useful open-source web game (also has a terminal version: `./terminal_game`) that lets you  
 test and improve your musical ear!
 
-Try it out: [music.SuperNinjaCat5.us](https://music.SuperNinjaCat5.us)
+Try it out: [music.superninjacat5.us](https://music.SuperNinjaCat5.us)
 
 ## About the project
 - A simple, fun project to help me and others improve musical skills 🔥  
