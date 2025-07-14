@@ -1,4 +1,8 @@
 {
-    "username": "SuperNinjaCat5",
-    "score": null
+    "SuperNinjaCat5": {
+        "scores": [
+            0,
+            0
+        ]
+    }
 }

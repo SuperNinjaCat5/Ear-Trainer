@@ -5,7 +5,13 @@ from dotenv import load_dotenv
 import os
 import json_controller
 
+debug_mode = False
+
 load_dotenv()
+
+def debug_print(text):
+    if debug_mode == True:
+        print(text)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersekrit")
@@ -62,6 +68,7 @@ def submit_level_duration():
 
 @app.route("/Quiz_Game/<level>-<duration>")
 def show_page_Quiz_Game(level, duration):
+    highscore = request.args.get("highscore", "")
     message = request.args.get("message", "")
     score = int(request.args.get("score", 0))
     freq = get_random_freq(level)
@@ -82,11 +89,12 @@ def show_page_Quiz_Game(level, duration):
         failpass = failpass
     else:
         failpass = "Pass"
-    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms, failpass=failpass)
+    return render_template("Quiz_Game.html", level=level, duration=duration, freq=freq, score=score, message=message, duration_ms=duration_ms, failpass=failpass, highscore=highscore)
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])
 def guess_submit_quiz_game():
     # Collect form data
+    highscore = request.args.get("highscore", "")
     player_guess = request.form.get("player_guess")
     original_freq = float(request.form.get("original_freq"))
     level = request.form.get("level")
@@ -125,7 +133,7 @@ def guess_submit_quiz_game():
     username = user_data.get("login")
     leaderboard_data = json_controller.read_data_json("leaderboard.json")
 
-    return redirect(url_for("submit_leaderboard", level=level, duration=duration, score=score, message=message, failpass=failpass))
+    return redirect(url_for("submit_leaderboard", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=highscore))
     #return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=data.get("score")))
 
 @app.route("/<page>")
@@ -162,12 +170,13 @@ def submit_level_duration_learn():
 
 @app.route("/Submit_Leaderboard", methods=["GET", "POST"])
 def submit_leaderboard():
+    highscore = request.args.get("highscore", "")
     level = request.args.get("level")
     duration = request.args.get("duration") 
     score = request.args.get("score")
     message = request.args.get("message", "")
     failpass = request.args.get("failpass", "")
-    score = request.form.get("score")
+    score = request.args.get("score")
 
     if not github.authorized:
         return jsonify({"error": "Unauthorized"}), 401
@@ -175,18 +184,27 @@ def submit_leaderboard():
     resp = github.get("/user")
     if not resp.ok:
         return jsonify({"error": f"Failed to fetch user info: {resp.text}"}), 500
-    resp = github.get("/user")
-    if not resp.ok:
-        return f"Failed to fetch user info: {resp.text}", 500
     
     user_data = resp.json()
     
-    data = {"username": user_data.get("login"), "score": score}
+    data = {
+        "username": user_data.get("login"),
+        "score": score
+    }
+    debug_print(f" Data {user_data}")
+
     json_controller.write_data_json("leaderboard.json", data)
 
-    data = {"username": user_data.get("login"), "score": score}
+    leaderboard_data = json_controller.read_data_json("leaderboard.json")
+    player_data = leaderboard_data.get(user_data.get("login"))
+    highscore=player_data.get("scores")
+    highscore = max(highscore) if highscore else 0
 
-    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=data.get("score")))
+    debug_print(highscore)
+
+    highscore = int(highscore) if highscore and highscore.isdigit() else 0
+    score = int(score) if score and score.isdigit() else 0
+    return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=highscore))
 
 @app.route("/Leaderboard")
 def show_leaderboard():
@@ -194,10 +212,24 @@ def show_leaderboard():
     if not resp.ok:
         return f"Failed to fetch user info: {resp.text}", 500
     user_data = resp.json()
-    username = user_data.get("login")
+    current_username = user_data.get("login")
     leaderboard_data = json_controller.read_data_json("leaderboard.json")
-    data = leaderboard_data.get(username)
+    current_user_data = leaderboard_data.get(current_username)
+
+    current_user_highscore=current_user_data.get("scores")
+    current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
+
+    for player in leaderboard_data:
+        current_username = user_data.get("login")
+        leaderboard_data = json_controller.read_data_json("leaderboard.json")
+        current_user_data = leaderboard_data.get(current_username)
+
+        current_user_highscore=current_user_data.get("scores")
+        current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
+    data_to_pass = f"{leaderboard_data}: "
+
     return render_template("Leaderboard.html", data=data)
 
 if __name__ == "__main__":
+    debug_mode = True
     app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True)
