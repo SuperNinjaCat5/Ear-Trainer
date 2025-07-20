@@ -230,4 +230,4 @@ def show_leaderboard():
 
 if __name__ == "__main__":
     debug_mode = True
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True)
