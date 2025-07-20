@@ -202,7 +202,7 @@ def submit_leaderboard():
 
     debug_print(highscore)
 
-    highscore = int(highscore) if highscore and highscore.isdigit() else 0
+    highscore = int(highscore) if highscore and isinstance(highscore, (int, float)) else 0
     score = int(score) if score and score.isdigit() else 0
     return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=highscore))
 
@@ -228,7 +228,7 @@ def show_leaderboard():
         current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
     data_to_pass = f"{leaderboard_data}: "
 
-    return render_template("Leaderboard.html", data=data)
+    return render_template("Leaderboard.html", data=data_to_pass)
 
 if __name__ == "__main__":
     debug_mode = True
