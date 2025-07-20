@@ -221,8 +221,7 @@ def show_leaderboard():
     data_to_pass = {} 
     for player in leaderboard_data:
         loop_player_data = leaderboard_data.get(player)
-
-        loop_current_user_score=loop_player_data.get("scores")
+        loop_current_user_score = loop_player_data.get("scores")
         loop_current_user_highscore = max(loop_current_user_score) if loop_current_user_score else 0
         data_to_pass[player] = loop_current_user_highscore
 
@@ -231,4 +230,4 @@ def show_leaderboard():
 
 if __name__ == "__main__":
     debug_mode = True
-    app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)
