@@ -8,6 +8,7 @@ Try it out: [music.superninjacat5.us](https://music.SuperNinjaCat5.us)
 ## About the project
 - A simple, fun project to help me and others improve musical skills 🔥  
 - Created by SuperNinjaCat5
+- AI disclosure [here](AI_USAGE.md)
 
 ## Current features
 - Two modes:  
