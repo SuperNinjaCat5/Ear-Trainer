@@ -218,16 +218,15 @@ def show_leaderboard():
 
     current_user_highscore=current_user_data.get("scores")
     current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
-
+    data_to_pass = {} 
     for player in leaderboard_data:
-        current_username = user_data.get("login")
-        leaderboard_data = json_controller.read_data_json("leaderboard.json")
-        current_user_data = leaderboard_data.get(current_username)
+        loop_player_data = leaderboard_data.get(player)
 
-        current_user_highscore=current_user_data.get("scores")
-        current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
-    data_to_pass = f"{leaderboard_data}: "
+        loop_current_user_score=loop_player_data.get("scores")
+        loop_current_user_highscore = max(loop_current_user_score) if loop_current_user_score else 0
+        data_to_pass[player] = loop_current_user_highscore
 
+    debug_print(data_to_pass)
     return render_template("Leaderboard.html", data=data_to_pass)
 
 if __name__ == "__main__":
