@@ -5,9 +5,7 @@ from dotenv import load_dotenv
 import os
 import json_controller
 
-debug_mode = False
-
-load_dotenv()
+load_dotenv() # You need a .env with FLASK_SECRET_KEY, GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET. They easy to get figure it out am lazy.
 
 def debug_print(text):
     if debug_mode == True:
@@ -20,10 +18,10 @@ app.config["GITHUB_OAUTH_CLIENT_SECRET"] = os.environ.get("GITHUB_OAUTH_CLIENT_S
 github_bp = make_github_blueprint()
 app.register_blueprint(github_bp, url_prefix="/login")
 
-VALID_PAGES = ['home', 'Quiz_Game', 'Learn_Game', 'Leaderboard', 'Quiz_Game_Menu']
+VALID_PAGES = ['home', 'Quiz_Game', 'Learn_Game', 'Leaderboard', 'Quiz_Game_Menu'] #idk why i have this prolly does nothing do with that what you will
 
 @app.route("/")
-@app.route("/home")
+@app.route("/home") # Have user git login
 def home():
     if not github.authorized:
         return redirect(url_for("github.login"))
@@ -34,7 +32,7 @@ def home():
     return render_template("home.html", username=username)
 
 
-@app.route("/quiz_game_menu")
+@app.route("/quiz_game_menu") #why lol
 def display_quiz_menu():
     return redirect(url_for("show_page_Quiz_Game"))
 
@@ -46,7 +44,7 @@ def display_learn_menu():
 def route_to_menu():
     return redirect(url_for("display_learn_menu"))
 
-@app.route("/submit", methods=["POST"])
+@app.route("/submit", methods=["POST"]) # w naming this is for the main home page btw i think
 def submit_game_choice():
     choice = request.form.get("user_input")
     if choice in VALID_PAGES:
@@ -93,7 +91,6 @@ def show_page_Quiz_Game(level, duration):
 
 @app.route("/guess_submit_quiz_game", methods=["POST"])
 def guess_submit_quiz_game():
-    # Collect form data
     highscore = request.args.get("highscore", "")
     player_guess = request.form.get("player_guess")
     original_freq = float(request.form.get("original_freq"))
@@ -101,8 +98,9 @@ def guess_submit_quiz_game():
     duration = request.form.get("duration")
     score = int(request.form.get("score", 0))
 
-    from web_quiz_game import get_random_freq
+    from web_quiz_game import get_random_freq # i dont use it but im to scared it will break if i remove it :sob:
 
+    #add flats yourself loser
     note_freqs = {
         'C1': 32.70, 'C#1': 34.65, 'D1': 36.71, 'D#1': 38.89, 'E1': 41.20, 'F1': 43.65, 'F#1': 46.25, 'G1': 49.00, 'G#1': 51.91, 'A1': 55.00, 'A#1': 58.27, 'B1': 61.74,
         'C2': 65.41, 'C#2': 69.30, 'D2': 73.42, 'D#2': 77.78, 'E2': 82.41, 'F2': 87.31, 'F#2': 92.50, 'G2': 98.00, 'G#2': 103.83, 'A2': 110.00, 'A#2': 116.54, 'B2': 123.47,
@@ -123,27 +121,27 @@ def guess_submit_quiz_game():
         message = "Correct!"
         failpass = "Pass"
     else:
-        message = f"Wrong Note! The correct note was {original_name}. You guessed: {player_guess.strip().upper()}"
+        message = f"Wrong Note! The correct note was {original_name}. You guessed: {player_guess.strip().upper()}" # you better say c4 not C (thats right henry)
         failpass = "Fail"
 
     resp = github.get("/user")
     if not resp.ok:
         return f"Failed to fetch user info: {resp.text}", 500
     user_data = resp.json()
-    username = user_data.get("login")
-    leaderboard_data = json_controller.read_data_json("leaderboard.json")
+    username = user_data.get("login") # am scare break
+    leaderboard_data = json_controller.read_data_json("leaderboard.json") # am scare break
 
     return redirect(url_for("submit_leaderboard", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=highscore))
     #return redirect(url_for("show_page_Quiz_Game", level=level, duration=duration, score=score, message=message, failpass=failpass, highscore=data.get("score")))
 
 @app.route("/<page>")
-def show_page_select_game(page):
+def show_page_select_game(page): # i dont even use this lol
     if page in VALID_PAGES:
         return render_template(f"{page}.html")
     else:
         abort(404)
 
-@app.route("/Learn_Game/<level>-<duration>")
+@app.route("/Learn_Game/<level>-<duration>") 
 def show_learn_game(level, duration):
     score = int(request.args.get("score", 0))
     freq = get_random_freq(level)
@@ -197,6 +195,8 @@ def submit_leaderboard():
 
     leaderboard_data = json_controller.read_data_json("leaderboard.json")
     player_data = leaderboard_data.get(user_data.get("login"))
+    if player_data is None:
+        player_data = leaderboard_data.get("Ilovepi3141") # Put Ilovepi3141 in the .json with scores of 0 so that it does not give error trust me on it.
     highscore=player_data.get("scores")
     highscore = max(highscore) if highscore else 0
 
@@ -215,21 +215,28 @@ def show_leaderboard():
     current_username = user_data.get("login")
     leaderboard_data = json_controller.read_data_json("leaderboard.json")
     current_user_data = leaderboard_data.get(current_username)
+    if current_user_data is None:
+        current_user_data = leaderboard_data.get("Ilovepi3141")
 
     current_user_highscore=current_user_data.get("scores")
     current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
-
+    data_to_pass = {} 
     for player in leaderboard_data:
-        current_username = user_data.get("login")
-        leaderboard_data = json_controller.read_data_json("leaderboard.json")
-        current_user_data = leaderboard_data.get(current_username)
+        loop_player_data = leaderboard_data.get(player)
+        loop_current_user_score = loop_player_data.get("scores")
+        loop_current_user_highscore = max(loop_current_user_score) if loop_current_user_score else 0
+        data_to_pass[player] = loop_current_user_highscore
 
-        current_user_highscore=current_user_data.get("scores")
-        current_user_highscore = max(current_user_highscore) if current_user_highscore else 0
-    data_to_pass = f"{leaderboard_data}: "
+    sorted_leaderboard = sorted(data_to_pass.items(), key=lambda x: x[1], reverse=True)
+    leaderboard_str = ""
 
-    return render_template("Leaderboard.html", data=data_to_pass)
+    for rank, (player, score) in enumerate(sorted_leaderboard, start=1): # Whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+        leaderboard_str += f"{rank:>2}. Score {score}: {player:<20}\n"
+
+    debug_print(leaderboard_str)
+
+    return render_template("Leaderboard.html", data=leaderboard_str) # I put a string into it lol what is this
 
 if __name__ == "__main__":
-    debug_mode = True
-    app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True)
+    debug_mode = True # Debug toggles the prints
+    app.run(ssl_context='adhoc', host="127.0.0.1", port=5000, debug=True) # I would change this if i were you

@@ -1,24 +1,29 @@
-# 🎵🎶🎺🎷🎻 Ear Trainer!
+# 🎵🎶🎺🎷🎻 Ear Trainer
 
-A useful open-source web game (also has a terminal version: `./terminal_game`) that lets you  
-test and improve your musical ear!
+SOM project to help me improve at music, coding, and web design.
 
-Try it out: [music.superninjacat5.us](https://music.SuperNinjaCat5.us)
+Demo: [music.superninjacat5.us](https://music.SuperNinjaCat5.us)
 
 ## About the project
-- A simple, fun project to help me and others improve musical skills 🔥  
-- Created by SuperNinjaCat5
+- Simple, fun project to help me improve my ear for jazz band 🎷🎷🎷🎷🎷🎷🎷
+- Created by your's truly: SuperNinjaCat5
 
 ## Current features
 - Two modes:  
   1. Quiz mode  
   2. Learn mode  
-- Terminal-based version available  
-- No global variables (supports multiple users simultaneously)  
-- Terminal version supports Windows only  
+- Terminal-based version (i guess windows only L)
+- No global variables (supports multiple users I THINK)  
 
-## Planned features
-- Leaderboard!  
-- GitHub login for saving progress  
+## Setup
+1. Git clone
+2. Create leadboard.json, add {"Ilovepi3141": {"scores": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}}
+3. Install stuff: ```bash pip install Flask flask-dance python-dotenv
+4. Create a github oauth
+5. Create a .env with FLASK_SECRET_KEY, GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET.
+6. Make sure it works locally
+7. Server it
 
+---
 🎵🎶🎺🎷🎻
+
