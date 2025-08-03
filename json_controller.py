@@ -14,7 +14,8 @@ def write_data_json(filename, new_entry):
     if username not in data:
         data[username] = {"scores": []}
 
-    data[username]["scores"].append(new_score)
-
+    if username != "Ilovepi3141":
+        data[username]["scores"].append(new_score)
+        
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
