@@ -1,0 +1,4 @@
+Flask
+gunicorn
+flask-dance
+python-dotenv
