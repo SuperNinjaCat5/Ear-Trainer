@@ -1,0 +1,5 @@
+Flask
+Flask-Dance
+Flask-Login
+python-dotenv
+requests
