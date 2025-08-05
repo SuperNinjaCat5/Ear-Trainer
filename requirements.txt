@@ -3,3 +3,4 @@ Flask-Dance
 Flask-Login
 python-dotenv
 requests
+gunicorn
