@@ -9,7 +9,7 @@ load_dotenv() # You need a .env with FLASK_SECRET_KEY, GITHUB_OAUTH_CLIENT_ID, G
 
 def debug_print(text):
     if debug_mode == True:
-        print(text)
+        print(f"\033[95m{text}\033[0m")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "supersekrit")
@@ -189,7 +189,8 @@ def submit_leaderboard():
         "username": user_data.get("login"),
         "score": score
     }
-    debug_print(f" Data {user_data}")
+
+    debug_print(f"User_Data: {user_data}, Data: {data if data else 'Fail'}")
 
     json_controller.write_data_json("leaderboard.json", data)
 

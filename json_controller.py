@@ -5,7 +5,7 @@ def read_data_json(filename): # am i the only person who copy pastes this
         data = json.load(f) # Changes
     return data
 
-def write_data_json(filename, new_entry):
+def write_data_json(filename, entry):
     username = entry["username"]
     score = int(entry["score"])
 
@@ -14,7 +14,8 @@ def write_data_json(filename, new_entry):
     if username not in data:
         data[username] = {"scores": []}
 
-    data[username]["scores"].append(score)
+    if score != 0 and score not in data:
+        data[username]["scores"].append(score)
 
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)

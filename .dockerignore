@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+.env
+.git
+node_modules/
+*.log
+dist/
+build/
+*.db
+*.sqlite3
+leaderboard.json
